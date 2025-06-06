@@ -60,8 +60,20 @@ class MarketDataFetcher(CcxtBase):
                     symbol: str,
                     timeframe: str = '1m',
                     since: Optional[int] = None,
-                    limit: Optional[int] = None) -> pd.DataFrame | None:
-        ohlcv_data: List[List] | None = self._fetch_ohlcv_timeseries(symbol, timeframe, since, limit)
+                    limit: Optional[int] = None) -> Optional[pd.DataFrame]:
+        """
+        Fetches and formats OHLCV data into a pandas DataFrame.
+        
+        Args:
+            symbol: The trading pair symbol (e.g., 'BTC/USDT')
+            timeframe: The timeframe for the OHLCV data (default: '1m')
+            since: Timestamp in milliseconds for the start time (optional)
+            limit: Maximum number of candles to return (optional)
+            
+        Returns:
+            Optional[pd.DataFrame]: DataFrame containing OHLCV data, or None if an error occurs
+        """
+        ohlcv_data: Optional[List[List]] = self._fetch_ohlcv_timeseries(symbol, timeframe, since, limit)
         if ohlcv_data is None:
             return None
         return self._format_ohlcv_data(ohlcv_data)

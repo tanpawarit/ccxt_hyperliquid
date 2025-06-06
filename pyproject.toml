@@ -1,15 +1,41 @@
 [project]
 name = "ccxt_hyperliquid"
 version = "0.1.0"
-description = "A Python package for Hyperliquid exchange integration using CCXT-like interface."
-authors = ["pawarison.ty@gmail.com"]
+description = "A Python package for Hyperliquid exchange integration using CCXT-like interface"
+authors = [
+    {name = "Pawarison Tanyu", email = "pawarison.ty@gmail.com"},
+]
+license = {text = "MIT"}
+readme = "README.md"
 requires-python = ">=3.8"
-
-[tool.uv]
-# Add uv-specific settings if needed
 
 [project.dependencies]
 ccxt = "*"
 pandas = "*"
 pytz = "*"
 discord-webhook = "*"
+python-dotenv = "*"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "isort>=5.0.0",
+    "mypy>=1.0.0",
+]
+
+[tool.black]
+line-length = 120
+target-version = ['py38']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/ccxt_hyperliquid"
+"Bug Tracker" = "https://github.com/yourusername/ccxt_hyperliquid/issues"
+
+[tool.uv]
+# Add uv-specific settings if needed

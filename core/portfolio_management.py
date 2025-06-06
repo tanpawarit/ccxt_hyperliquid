@@ -159,39 +159,50 @@ class CcxtPortfolioManagement(CcxtBase):
         return final_signals
 
     @staticmethod
-    def categorize_signals(signal_list, positions_list):
+    def categorize_signals(
+        signal_list: list[dict | Any], 
+        positions_list: list[dict[str, Any]]
+    ) -> tuple[list[dict | Any], list[dict | Any]]:
         """
-        แยกสัญญาณออกเป็น open_signal และ close_signal
+        Categorizes signals into open signals and close signals based on existing positions.
 
         Args:
-            signal_list (list): ลิสต์ของ signals (สามารถเป็น list of objects หรือ list of dicts)
-            positions_list (list): ลิสต์ของ positions (เป็น list of dicts)
+            signal_list: List of signals (can be a list of objects or list of dicts)
+            positions_list: List of positions (list of dicts)
 
         Returns:
-            tuple: (open_signal, close_signal)
-                open_signal (list): ลิสต์ของสัญญาณสำหรับเปิดออเดอร์ใหม่
-                close_signal (list): ลิสต์ของสัญญาณสำหรับปิดออเดอร์ที่มีอยู่
+            tuple: (open_signals, close_signals)
+                open_signals (list): List of signals for opening new orders
+                close_signals (list): List of signals for closing existing positions
         """
-        open_signal_result = []
-        close_signal_result = []
+        open_signal_result: list[dict | Any] = []
+        close_signal_result: list[dict | Any] = []
 
         for s_item in signal_list:
-            is_closing_signal = False
+            is_closing_signal: bool = False
              
+            # Extract symbol and side from signal (handling both dict and object)
+            signal_symbol: str = ''
+            signal_side: str = ''
             if isinstance(s_item, dict):
-                signal_symbol = s_item['symbol']
-                signal_side = s_item['side']
+                signal_symbol = s_item.get('symbol', '')
+                signal_side = s_item.get('side', '')
             else:  
-                signal_symbol = s_item.symbol
-                signal_side = s_item.side
-                
+                signal_symbol = getattr(s_item, 'symbol', '')
+                signal_side = getattr(s_item, 'side', '')
+            
+            # Check if this signal would close any existing position
             for p_item in positions_list:
-                if signal_symbol == p_item['symbol']:
-                    if (signal_side == 'buy' and p_item['side'] == 'short') or \
-                    (signal_side == 'sell' and p_item['side'] == 'long'):
+                position_symbol: str = p_item.get('symbol', '')
+                position_side: str = p_item.get('side', '')
+                
+                if signal_symbol == position_symbol:
+                    if (signal_side == 'buy' and position_side == 'short') or \
+                       (signal_side == 'sell' and position_side == 'long'):
                         is_closing_signal = True
                         break 
             
+            # Categorize the signal
             if is_closing_signal:
                 close_signal_result.append(s_item)
             else:

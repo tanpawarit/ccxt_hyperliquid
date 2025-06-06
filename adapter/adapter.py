@@ -34,61 +34,12 @@ class SignalTweetAdapter:
 
     def __init__(self) -> None:
         self.author: list[str] = [
-            "trading__horse", 
-            "NB1763", 
-            "Learnernoearner", 
-            "CoinGurruu",
-            "MustStopMurad",
-            "aixbt_agent",
-            "DarkCryptoLord",
-            "jtradestar",
-            "TheCryptoDog"
+            "DELETED (internal query)",  
         ]
 
     def _query_signal_upstream(self) -> List[SignalTweetUpstream] | None:
-        additional_where: str = (
-            "twitter_crypto_backtesting.crypto_winrate_1d * 0.35 + "
-            "twitter_crypto_backtesting.crypto_winrate_3d * 0.3 + "
-            "twitter_crypto_backtesting.crypto_winrate_7d * 0.2 + "
-            "twitter_crypto_backtesting.crypto_winrate_15d * 0.1 + "
-            "twitter_crypto_backtesting.crypto_winrate_30d * 0.05"
-        ) 
         query: str = f"""
-            WITH ranked_authors AS (
-                SELECT 
-                    twitter_crypto_author_profile.author_id,
-                    twitter_crypto_author_profile.author_username,
-                    twitter_crypto_author_profile.author_url,
-                    twitter_crypto_author_profile.author_twitterurl,
-                    twitter_crypto_author_profile.author_name,
-                    twitter_crypto_author_profile.author_followers,
-                    twitter_crypto_author_profile.author_following,
-                    twitter_crypto_author_profile.created_at,
-                    twitter_crypto_author_profile.updated_at,
-                    {additional_where} AS winrate,
-                    ROW_NUMBER() OVER (ORDER BY {additional_where} DESC) AS rank
-                FROM twitter_crypto_author_profile
-                INNER JOIN twitter_crypto_backtesting
-                    ON twitter_crypto_backtesting.author_id = twitter_crypto_author_profile.author_id
-                WHERE twitter_crypto_author_profile.is_select = true 
-                    AND twitter_crypto_backtesting.total_count_signals >= 10
-                    AND twitter_crypto_author_profile.author_username IN ({', '.join([f"'{author}'" for author in self.author])})
-            )
-            SELECT 
-                ra.author_username,
-                ra.winrate,
-                tct.id AS tweet_id,
-                tct.text AS tweet_text,
-                tct.created_at AS tweet_created_at,
-                tcs.ticker,
-                tcs.action,
-                NULL AS message
-            FROM ranked_authors ra
-            LEFT JOIN twitter_crypto_tweets tct
-                ON ra.author_username = tct.author_username
-            LEFT JOIN twitter_crypto_signal tcs
-                ON tct.id = tcs.tweet_id
-            ORDER BY ra.winrate DESC, tct.created_at DESC
+           "DELETED (internal query)"
         """
 
         db: Any = get_database()

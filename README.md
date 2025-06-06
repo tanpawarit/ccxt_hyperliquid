@@ -23,7 +23,6 @@ ccxt_hyperliquid/
 ```
 
 
-
 ## Features
 - Unified interface for trading on Hyperliquid exchange
 - Modular architecture for easy extension and maintenance
@@ -61,11 +60,7 @@ ccxt_hyperliquid/
 - Follow PEP8 and use type hints throughout the codebase.
 - Project dependencies are managed with `pyproject.toml` and `uv`.
 - For testing and extension, add new modules to `core/` or `adapter/` as appropriate.
-
-## TODO / Recommendations
-- Add a `tests/` directory for unit and integration tests.
-- Expand documentation for each module and function.
-- Consider moving `ccxt_base.py` to `core/` or a new `utils/` directory for better organization if the codebase grows.
-
+ 
 ## License
-MIT
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
