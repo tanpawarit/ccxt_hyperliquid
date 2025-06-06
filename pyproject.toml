@@ -1,0 +1,15 @@
+[project]
+name = "ccxt_hyperliquid"
+version = "0.1.0"
+description = "A Python package for Hyperliquid exchange integration using CCXT-like interface."
+authors = ["pawarison.ty@gmail.com"]
+requires-python = ">=3.8"
+
+[tool.uv]
+# Add uv-specific settings if needed
+
+[project.dependencies]
+ccxt = "*"
+pandas = "*"
+pytz = "*"
+discord-webhook = "*"
