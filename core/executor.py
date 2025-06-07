@@ -413,53 +413,53 @@ class FutureExecution:
             raise
 
 # --- example execution used ---
-if __name__ == "__main__":
-    logger.info("=== Script Start: Hyperliquid Future Execution ===")
-    executor: FutureExecution = FutureExecution()
-    selected_trading_symbol: str = 'BTC/USDC:USDC'
-    trade_side_to_execute: str = 'buy' # 'buy' or 'sell' 
-    target_trade_value_usdc: float | None = 12 # Use a value that meets min requirements, e.g. $11 + buffer levrage money you want to use
+# if __name__ == "__main__":
+#     logger.info("=== Script Start: Hyperliquid Future Execution ===")
+#     executor: FutureExecution = FutureExecution()
+#     selected_trading_symbol: str = 'BTC/USDC:USDC'
+#     trade_side_to_execute: str = 'buy' # 'buy' or 'sell' 
+#     target_trade_value_usdc: float | None = 12 # Use a value that meets min requirements, e.g. $11 + buffer levrage money you want to use
     
-    # Set your desired percentages (e.g., 2% stop loss, 5% take profit)
-    tp_percent = 5.0  # 5% take profit
-    sl_percent = 2.0  # 2% stop loss
+#     # Set your desired percentages (e.g., 2% stop loss, 5% take profit)
+#     tp_percent = 5.0  # 5% take profit
+#     sl_percent = 2.0  # 2% stop loss
     
-    # Get the current price to calculate SL/TP
-    ticker = executor._get_ticker_info(selected_trading_symbol)
-    current_price = float(ticker['last'])
+#     # Get the current price to calculate SL/TP
+#     ticker = executor._get_ticker_info(selected_trading_symbol)
+#     current_price = float(ticker['last'])
     
-    # Calculate SL and TP prices based on the trade side
-    if trade_side_to_execute.lower() == 'buy':
-        # For LONG: TP above entry, SL below entry
-        tp_price = current_price * (1 + tp_percent/100)
-        sl_price = current_price * (1 - sl_percent/100)
-    else:  # Short position
-        # For SHORT: TP below entry, SL above entry
-        tp_price = current_price * (1 - tp_percent/100)
-        sl_price = current_price * (1 + sl_percent/100)
+#     # Calculate SL and TP prices based on the trade side
+#     if trade_side_to_execute.lower() == 'buy':
+#         # For LONG: TP above entry, SL below entry
+#         tp_price = current_price * (1 + tp_percent/100)
+#         sl_price = current_price * (1 - sl_percent/100)
+#     else:  # Short position
+#         # For SHORT: TP below entry, SL above entry
+#         tp_price = current_price * (1 - tp_percent/100)
+#         sl_price = current_price * (1 + sl_percent/100)
     
-    try:
-        trade_results: dict[str, Any] = executor.execute_trade(
-            symbol=selected_trading_symbol, 
-            side=trade_side_to_execute,
-            target_usdc_amount=target_trade_value_usdc,
-            leverage=2,
-            stop_loss_price=sl_price,
-            take_profit_price=tp_price
-        )
-        # Using the new helper for final logging as well
-        executor._log_order_summary("Final Main order result", trade_results.get('main_order'))
-        if sl_price: # Only log SL if it was attempted
-            executor._log_order_summary("Final Stop Loss order result", trade_results.get('stop_loss_order'))
-        if tp_price: # Only log TP if it was attempted
-            executor._log_order_summary("Final Take Profit order result", trade_results.get('take_profit_order'))
+#     try:
+#         trade_results: dict[str, Any] = executor.execute_trade(
+#             symbol=selected_trading_symbol, 
+#             side=trade_side_to_execute,
+#             target_usdc_amount=target_trade_value_usdc,
+#             leverage=2,
+#             stop_loss_price=sl_price,
+#             take_profit_price=tp_price
+#         )
+#         # Using the new helper for final logging as well
+#         executor._log_order_summary("Final Main order result", trade_results.get('main_order'))
+#         if sl_price: # Only log SL if it was attempted
+#             executor._log_order_summary("Final Stop Loss order result", trade_results.get('stop_loss_order'))
+#         if tp_price: # Only log TP if it was attempted
+#             executor._log_order_summary("Final Take Profit order result", trade_results.get('take_profit_order'))
 
-        if trade_results.get('main_order') and trade_results['main_order'].get('id'):
-            logger.info(f"Trade execution process completed for {selected_trading_symbol}.")
-        else: 
-            logger.warning(f"Main trade for {selected_trading_symbol} might have failed or no ID returned.")
+#         if trade_results.get('main_order') and trade_results['main_order'].get('id'):
+#             logger.info(f"Trade execution process completed for {selected_trading_symbol}.")
+#         else: 
+#             logger.warning(f"Main trade for {selected_trading_symbol} might have failed or no ID returned.")
 
-    except Exception as e: 
-        logger.error(f"MAIN: Trade execution failed for {selected_trading_symbol}. Reason: {e}")
+#     except Exception as e: 
+#         logger.error(f"MAIN: Trade execution failed for {selected_trading_symbol}. Reason: {e}")
     
-    logger.info("=== Script End ===")
+#     logger.info("=== Script End ===")
